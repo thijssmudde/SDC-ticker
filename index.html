@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--
+		Created by Fullhdpixel (@Twitter)
+	-->
+	
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<!-- Javascript files -->
+	<script src="./js/jquery-1.10.2.min.js"></script>
+	
+	<title>SDC price ticker</title>
+</head>
+<body>
+
+<div id="pricebtc"></div>
+<div id="pricesdc"></div>
+
+<script>
+$(document).ready( function() {
+	getBitstamp();
+});
+
+function getBitstamp() {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var jsonusd = xmlhttp.responseText;
+			var parsedusd = JSON.parse(jsonusd);
+			var lastusd = parsedusd.LastUSD;
+			alert(lastusd);
+			getBittrex(lastusd);
+		}
+	}
+	xmlhttp.open("GET","getBitstamp.php",true);
+	xmlhttp.send();
+}
+
+function getBittrex(btcprice) {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var jsonsdc = xmlhttp.responseText;
+			var parsedsdc = JSON.parse(jsonsdc);
+			var lastsdc = parsedsdc.Last;
+			alert(lastsdc);
+			randomThing(lastsdc, btcprice);			
+		}
+	}
+	xmlhttp.open("GET","getBittrex.php",true);
+	xmlhttp.send();	
+}
+
+function randomThing(sdcprice, btcprice) {	
+	if (sdcprice != '' && btcprice != '') {
+		var priceusd = sdcprice * btcprice;
+		$('#pricebtc').html(sdcprice + " BTC");
+		$('#pricesdc').html(priceusd + " SDC");
+	} else {
+		alert('No data initialized');
+	}
+}
+</script>
+</body>
+</html>
